@@ -1,5 +1,5 @@
 angular.module('ui.select2', []).value('uiSelect2Config', {}).directive('uiSelect2', ['uiSelect2Config', '$timeout',
-  '$parse', '$rootScope', function (uiSelect2Config, $timeout, $parse, $rootScope) {
+  '$parse', function (uiSelect2Config, $timeout, $parse) {
     var options = {};
     if (uiSelect2Config) {
       angular.extend(options, uiSelect2Config);
@@ -120,11 +120,15 @@ angular.module('ui.select2', []).value('uiSelect2Config', {}).directive('uiSelec
               var isLoading = (typeof current === 'boolean') ? current : (!current || current.length === 0);
               if (isLoading) {
                 opts.containerCssClass = 'loading';
+                elm.select2().prop("disabled", 'true');
               } else {
                 opts.containerCssClass = '';
                 if (angular.isObject(current)) {
                   opts.data = convertToSelect2Model(current);
                   items = current;
+                }
+                if(!attrs.disabled) {
+                  elm.select2().prop("disabled", false);
                 }
               }
               $timeout(function() {
