@@ -31,7 +31,6 @@ angular.module('ui.select2', []).value('uiSelect2Config', {}).directive('uiSelec
           var items = [];
           var selected;
 
-          <!-- UMBERTO -->
           function matchStart(term, text, object) {
             console.log('matchStart:', term, text, object);
             var found = false;
@@ -71,8 +70,6 @@ angular.module('ui.select2', []).value('uiSelect2Config', {}).directive('uiSelec
             return jsonStr;
           }
 
-          <!-- UMBERTO -->
-
           /*
            Convert from Select2 view-model to Angular view-model.
            */
@@ -102,14 +99,11 @@ angular.module('ui.select2', []).value('uiSelect2Config', {}).directive('uiSelec
             }
             var valueField = opts.valueField || 'id';
             var textField = opts.displayField || 'text';
-            //if (opts.simple_tags) {
-            model = [];
+
             angular.forEach(angular_data, function(value, index) {
               model.push({'id': value[valueField], 'text': value[textField]});
             });
-            //} else {
-            //  model = angular_data;
-            //}
+
             return model;
           };
 
@@ -146,16 +140,6 @@ angular.module('ui.select2', []).value('uiSelect2Config', {}).directive('uiSelec
                   return;
                 }
                 items = newVal;
-                // Delayed so that the options have time to be rendered
-                //$timeout(function() {
-                //  opts.val = controller.$viewValue;
-                //  elm.select2(opts);
-                //   Refresh angular to remove the superfluous option
-                //controller.$render();
-                //if(newVal && !oldVal && controller.$setPristine) {
-                //  controller.$setPristine(true);
-                //}
-                //});
               });
             }
 
@@ -202,30 +186,6 @@ angular.module('ui.select2', []).value('uiSelect2Config', {}).directive('uiSelec
                 $t.trigger('change.select2');
               }
             });
-            // elm.bind("change", function (e) {
-            //   e.stopImmediatePropagation();
-
-            //   if (items.selected && angular.isString(items.selected)) {
-            //     selected = toJson(items.selected);
-            //   }
-            //   if (!selected) {
-            //     selected = items.selected;
-            //   }
-            //   selectedItems = selected;
-            //   var val = elm.select2(opts).val();
-            //   if (angular.isArray(val)) {
-            //     selectedItems = [];
-            //     angular.forEach(val, function(value, index) {
-            //       selectedItems.push(value);
-            //     });
-            //   }
-            //   console.log('selItems:', selectedItems);
-            //   $timeout(function() {
-            //     onSelectCallback(scope, {$item: selected});
-            //     // elm.select2(opts).val(selectedItems).trigger('select2:select');
-            //     // elm.select2(opts).val(selected).prop("selected","selected");
-            //   });
-            // });
           }
 
           elm.bind("$destroy", function() {
