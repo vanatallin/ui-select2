@@ -162,6 +162,20 @@ angular.module('ui.select2', []).value('uiSelect2Config', {}).directive('uiSelec
             var selectedItems;
             // Workaround for https://github.com/select2/select2/issues/3106
             if (isMultiple) {
+              elm.select2(opts).on('select2:unselect', function(e){
+                var index = selectedItems.indexOf(e.params.data.id);
+                if (index > -1) {
+                  selectedItems.splice(index, 1);
+                }
+                console.log('select2-removing', items, selectedItems);
+                var newItems = items;
+                newItems.filter(function(newItem) {
+                  return selectedItems.indexOf(newItem.name) > -1;
+                });
+                console.log('newItems:', newItems);
+                opts.data = convertToSelect2Model(newItems);
+                elm.select2(opts)
+              });
               elm.select2(opts).on('select2:select', function(e){
                 e.stopImmediatePropagation();
                 if (e.params && e.params.data && e.params.data.element) {
@@ -209,25 +223,28 @@ angular.module('ui.select2', []).value('uiSelect2Config', {}).directive('uiSelec
           }
 
           // Initialize the plugin late so that the injected DOM does not disrupt the template compiler
-          // $timeout(function () {
-          //   elm.select2(opts);
-          //   // Set initial value - I'm not sure about this but it seems to need to be there
-          //   elm.select2('data', controller.$modelValue);
-          //   // important!
-          //   controller.$render();
-          //   // Not sure if I should just check for !isSelect OR if I should check for 'tags' key
-          //   if (!opts.initSelection && !isSelect) {
-          //     var isPristine = controller.$pristine;
-          //     controller.$pristine = false;
-          //     controller.$setViewValue(
-          //         convertToAngularModel(elm.select2('data'))
-          //     );
-          //     if (isPristine) {
-          //       controller.$setPristine();
-          //     }
-          //     elm.prev().toggleClass('ng-pristine', controller.$pristine);
-          //   }
-          // });
+          $timeout(function () {
+            // opts.initSelection = function(element, callback) {
+            //   callback(element.data("initial"));
+            // }
+            // elm.select2(opts);
+            //   // Set initial value - I'm not sure about this but it seems to need to be there
+            //   elm.select2('data', controller.$modelValue);
+            //   // important!
+            //   controller.$render();
+            //   // Not sure if I should just check for !isSelect OR if I should check for 'tags' key
+            //   if (!opts.initSelection && !isSelect) {
+            //     var isPristine = controller.$pristine;
+            //     controller.$pristine = false;
+            //     controller.$setViewValue(
+            //         convertToAngularModel(elm.select2('data'))
+            //     );
+            //     if (isPristine) {
+            //       controller.$setPristine();
+            //     }
+            //     elm.prev().toggleClass('ng-pristine', controller.$pristine);
+            //   }
+          });
         };
       }
     };
